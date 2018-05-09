@@ -14,11 +14,11 @@ pipeline {
     stages {
         stage('Creating virtualenv'){
             steps{
-                sh '''#!/bin/bash
+                sh """#!/bin/bash
                 virtualenv -p python3 venv
                 source venv/bin/activate
                 pip3 install -r requirements.txt
-                '''
+                """"
             }
         }
         stage('Check for merge conflicts'){
