@@ -10,8 +10,11 @@ from requests.exceptions import ConnectionError
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 #Construct the URL based on input parameters
-url = 'http://%s/api/v1/branches/%s/conflicts?applicationName=%s&applicationVersion=%s' % (sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
-logging.info('REST URL has been generated: %s' % url)
+try:
+    url = 'http://%s/api/v1/branches/%s/conflicts?applicationName=%s&applicationVersion=%s' % (sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    logging.info('REST URL has been generated: %s' % url)
+except IndexError:
+    logging.debug('Not enough parameters have been passed')
 
 # Perform the GET request to check for conflicts. 
 try:
