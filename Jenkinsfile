@@ -38,4 +38,9 @@ pipeline {
             }
         }
     }
+    postBuild{
+        failure{
+            sh 'echo "Failed"'
+        }
+    }
 }
