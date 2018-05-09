@@ -27,11 +27,11 @@ pipeline {
                 sh '. venv/bin/activate && python3 ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'
             }
         }
-        post{
-            always {
-                echo ('Clear workspace')
-                deleteDir()
-            }
+    }
+    post{
+        always {
+            echo ('Clear workspace')
+            deleteDir()
         }
     }
 }
