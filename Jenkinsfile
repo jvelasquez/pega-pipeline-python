@@ -10,7 +10,6 @@ pipeline {
       timeout(time: 15, unit: 'MINUTES')
       withCredentials(bindings: [usernamePassword(credentialsId: 'imsadmin', usernameVariable: 'IMS_USER', passwordVariable: 'IMS_PASSWORD')])
     }
-
     stages {
         stage('Creating virtualenv'){
             steps{
@@ -26,12 +25,6 @@ pipeline {
                 echo 'Determine Conflicts'
                 sh '. venv/bin/activate && python3 ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'
             }
-        }
-    }
-    post{
-        always {
-            echo ('Clear workspace')
-            deleteDir()
         }
     }
 }
