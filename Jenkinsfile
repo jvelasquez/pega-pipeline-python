@@ -21,7 +21,7 @@ pipeline {
                 }
 
                 echo 'Determine Conflicts'
-                sh "./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}"
+                sh 'python ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'
             }
         }
     }
