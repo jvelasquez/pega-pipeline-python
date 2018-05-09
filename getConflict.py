@@ -16,14 +16,13 @@ logging.info('REST URL has been generated: %s' % url)
 # Perform the GET request to check for conflicts. 
 try:
     r = requests.get(url)
-    print r.text
 except ConnectionError as e:
     logging.info("Unable to connect to the specified URL. Please check the supplied parameters")
     sys.exit(1)
 
 # Check that the correct status code is returned
 if r.status_code == 500:
-    logging.info('User details successfully obtained.')
+    logging.info('Conflict details successfully obtained.')
 else:
     logging.error("Unable to check for conflicts. [HTTP response=%s]." % (r.text))
 
@@ -31,10 +30,10 @@ else:
 details =  json.loads(r.text)
 
 # Retrieve the conflict count from the JSON
-conflictCount = details["conflictsCount"]
+conflictCount = int(details["conflictsCount"])
 
 # Check if there are any conflicts. If there are, fail the build
-if conflictCount > 1:
+if conflictCount == 1:
     logging.error("Conflict Detected.")
     sys.exit(1)
 else:
