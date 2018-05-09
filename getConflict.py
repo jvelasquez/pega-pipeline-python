@@ -16,6 +16,7 @@ logging.info('REST URL has been generated: %s' % url)
 # Perform the GET request to check for conflicts. 
 try:
     r = requests.get(url)
+    print r.text
 except ConnectionError as e:
     logging.info("Unable to connect to the specified URL. Please check the supplied parameters")
     sys.exit(1)
