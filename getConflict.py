@@ -17,7 +17,7 @@ logging.info('REST URL has been generated: %s' % url)
 try:
     r = requests.get(url)
 except ConnectionError as e:
-    print "Unable to connect to the specified URL. Please check the supplied parameters"
+    logging.info("Unable to connect to the specified URL. Please check the supplied parameters")
     sys.exit(1)
 
 # Check that the correct status code is returned
@@ -33,7 +33,7 @@ details =  json.loads(r.text)
 conflictCount = details["conflictsCount"]
 
 # Check if there are any conflicts. If there are, fail the build
-if conflictCount == 1:
+if conflictCount > 1:
     logging.error("Conflict Detected.")
     sys.exit(1)
 else:

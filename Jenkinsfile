@@ -12,7 +12,14 @@ pipeline {
     }
 
     stages {
-
+        stage('Creating virtualenv'){
+            steps{
+                sh '''virtualenv -p python3 venv
+                source venv/bin/activate
+                pip3 install -r requirements.txt
+                '''
+            }
+        }
         stage('Check for merge conflicts'){
             steps {
                 echo ('Clear workspace')
@@ -21,7 +28,7 @@ pipeline {
                 }
 
                 echo 'Determine Conflicts'
-                sh 'python ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'
+                sh 'source venv/bin/activate && python3 ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'
             }
         }
     }
