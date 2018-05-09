@@ -11,8 +11,8 @@ pipeline {
       withCredentials(bindings: [usernamePassword(credentialsId: 'imsadmin', usernameVariable: 'IMS_USER', passwordVariable: 'IMS_PASSWORD')])
     }
     stages {
-        stage('Notifying User'){
-            steps{
+        stage('Notifying User') {
+            steps {
                 emailext (
                     subject: 'STARTED: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]',
                     body: '''<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
@@ -21,8 +21,8 @@ pipeline {
                 )
             }
         }
-        stage('Creating virtualenv'){
-            steps{
+        stage('Creating virtualenv') {
+            steps {
                 sh '''#!/bin/bash
                 virtualenv -p python3 venv &> /dev/null
                 . venv/bin/activate venv &> /dev/null
@@ -30,7 +30,7 @@ pipeline {
                 '''
             }
         }
-        stage('Check for merge conflicts'){
+        stage('Check for merge conflicts') {
             steps {
                 echo 'Determine Conflicts'
                 sh '''. venv/bin/activate venv &> /dev/null
@@ -38,8 +38,8 @@ pipeline {
             }
         }
     }
-    postBuild{
-        failure{
+    post {
+        failure {
             sh 'echo "Failed"'
         }
     }
