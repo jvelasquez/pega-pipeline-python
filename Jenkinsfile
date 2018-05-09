@@ -23,13 +23,14 @@ pipeline {
         }
         stage('Check for merge conflicts'){
             steps {
-                echo ('Clear workspace')
-                dir ('build/export') {
-                    deleteDir()
-                }
-
                 echo 'Determine Conflicts'
                 sh '. venv/bin/activate && python3 ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'
+            }
+        }
+        stage('Clear workspace'){
+            steps {
+                echo ('Clear workspace')
+                deleteDir()
             }
         }
     }
