@@ -15,6 +15,7 @@ try:
     logging.info('REST URL has been generated: %s' % url)
 except IndexError:
     logging.debug('Not enough parameters have been passed')
+    sys.exit(1)
 
 # Perform the GET request to check for conflicts. 
 try:
