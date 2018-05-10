@@ -54,7 +54,6 @@ details = json.loads(r.text)
 # Return the merge ID
 mergeId = details["ID"]
 
-
 # Construct the URL based on input parameters
 statusUrl = 'http://%s/prweb/api/v1/merges/%s' % (args.baseUrl, mergeId)
 
@@ -73,14 +72,14 @@ for i in range(24):
     statusDetails = json.loads(statusResponse.text)
 
     # Chech the status message of the merge
-    if mergeCheckDetails["statusMessage"] == "Processing":
+    if statusDetails["statusMessage"] == "Processing":
         logging.info('Merge is still processing')
         time.sleep(5)
-    elif mergeCheckDetails["statusMessage"] == "Failure":
+    elif statusDetails["statusMessage"] == "Failure":
         logging.debug('Merge has failed')
-        logging.debug(mergeCheckDetails["errors"][0]["message"])
+        logging.debug(statusDetails["errors"][0]["message"])
         sys.exit(1)
-    elif mergeCheckDetails["statusMessage"] == "Success":
+    elif statusDetails["statusMessage"] == "Success":
         logging.debug('Merge was successful!')
         break
 
