@@ -41,4 +41,3 @@ details =  json.loads(r.text)
 
 #Return the merge ID
 mergeId = details["ID"]
-quit(mergeId)
