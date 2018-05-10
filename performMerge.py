@@ -41,3 +41,33 @@ details =  json.loads(r.text)
 
 #Return the merge ID
 mergeId = details["ID"]
+
+#Construct the URL based on input parameters
+statusUrl = 'http://%s/api/v1/merges/%s' % (args.baseUrl, mergeId)
+
+#Begin the checking of merge status
+for i in range(24):
+    
+    try:
+        statusRequest = requests.get(statusUrl)
+    except ConnectionError as e:
+        logging.info("Unable to connect to the specified URL. Please check the supplied parameters")
+        sys.exit(1)
+
+    details =  json.loads(statusRequest.text)
+
+    if mergeCheckDetails["statusMessage"] == "Processing":
+        logging.info('Merge is still processing')
+        time.sleep(2)
+
+    elif mergeCheckDetails["statusMessage"] == "Failure":
+        logging.debug('Merge has failed')
+        logging.debug(mergeCheckDetails["errors"][0]["message"])
+        sys.exit(1)
+
+    elif mergeCheckDetails["statusMessage"] == "Success":
+        logging.debug('Merge was successful!')
+        break
+else:
+    logging.debug('Merge has timed out')
+    sys.exit(1)
