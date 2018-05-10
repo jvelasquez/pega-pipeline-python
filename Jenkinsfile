@@ -37,6 +37,18 @@ pipeline {
                 python3 ./getConflict.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion}'''
             }
         }
+        stage('Unit Testing') {
+            steps {
+                echo 'COMPLETE UNIT TESTS HERE'
+            }
+        }
+        stage('Merging the branch') {
+            steps {
+                 echo 'Merging the branch'
+                sh '''. venv/bin/activate venv &> /dev/null
+                python3 ./performMerge.py ${PEGA_DEV} ${branchName} ${applicationName} ${applicationVersion} ${mergePolicy}'''
+            }
+        }
     }
     post {
         failure {
