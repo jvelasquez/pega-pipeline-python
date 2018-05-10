@@ -4,31 +4,38 @@ import requests
 import json
 import logging
 import os
+import argparse
 from requests.exceptions import ConnectionError
 
 # Set the log stream to output via stdout
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
+#Parse inbound arguments
+parser = argparse.ArgumentParser(description="Check for branch merge conflicts on PEGA.")
+parser.add_argument("baseUrl", help="The base url of the server. This should not include http://, https:// or /prweb. It should be in the form 'example.com'.")
+parser.add_argument("branch", help="The name of the branch you want to conflict check.")
+parser.add_argument("applicationName", help="The name of the application the branch exists in.")
+parser.add_argument("applicationVersion", help="The version of the application the branch exists in.")
+args = parser.parse_args()
+
 #Construct the URL based on input parameters
-try:
-    url = 'http://%s/api/v1/branches/%s/conflicts?applicationName=%s&applicationVersion=%s' % (sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
-    logging.info('REST URL has been generated: %s' % url)
-except IndexError:
-    logging.debug('Not enough parameters have been passed')
-    sys.exit(1)
+apiUrl = 'http://%s/prweb/api/v1/branches/%s/conflicts?applicationName=%s&applicationVersion=%s' % (args.baseUrl, args.branch, args.applicationName, args.applicationVersion)
 
 # Perform the GET request to check for conflicts. 
 try:
-    r = requests.get(url)
+    r = requests.get(apiUrl)
 except ConnectionError as e:
-    logging.info("Unable to connect to the specified URL. Please check the supplied parameters")
+    logging.info("A connection error has occured when trying to run the REST command.")
     sys.exit(1)
 
 # Check that the correct status code is returned
 if r.status_code == 500:
     logging.info('Conflict details successfully obtained.')
 else:
-    logging.error("Unable to check for conflicts. [HTTP response=%s]." % (r.text))
+    logging.error("Unable to check for conflicts.")
+    logging.error("STATUS CODE: %s" % (r.status_code))
+    logging.error("RESPONSE: %s" % (r.text))
+    sys.exit(1)
 
 # Parse the JSON
 details =  json.loads(r.text)
